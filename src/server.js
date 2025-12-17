@@ -1,18 +1,17 @@
 import mongoose from 'mongoose';
 import {DB_NAME} from './constants.js';
 import dotenv from 'dotenv';
-
+import { app } from './app.js';
+import express from 'express'
+import connectDB from './db/server.connect.js';
+import { asyncHandler } from './utils/asyncHandler.js';
 
 dotenv.config({
     quiet:true,
     path:'./.env'
 });
 
-import express from 'express'
-import connectDB from './db/server.connect.js';
 
-
-const app=express()
 // ( async()=>{
 //     try {
 //        await mongoose.connect(`${process.env.MONGODB_URL}/${DB_NAME}`)
@@ -30,4 +29,11 @@ const app=express()
 //         throw err
 //     }
 // })()
-connectDB();
+connectDB().then(()=>{
+    app.listen(process.env.PORT || 8000, ()=>{
+        console.log(`Server is running on port :${process.env.PORT}`);
+    })
+}).catch((error)=>{
+    console.error("Problem in connection with server",error);
+    process.exit(1);
+})
