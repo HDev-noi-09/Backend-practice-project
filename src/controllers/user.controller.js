@@ -49,7 +49,7 @@ const registerUser=asyncHandler( async (req,res) => {
   if(!createdUser) {
     throw new Apierror(500,"Registered user's entry doesn't exist!!")
   }
-  return.statusCode(201).json(
+  return res.statusCode(201).json(
     new APIResponse(200,createdUser,"User successfully registered")
   )
 })
