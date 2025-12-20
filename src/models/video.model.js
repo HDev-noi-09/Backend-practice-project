@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
+import { User } from "./user.models";
 const videoSchema = new Schema({
   videoFile: { type: String, required: true },
   thumbnail: { type: String, required: true },
@@ -17,4 +18,4 @@ videoSchema.plugin(mongooseAggregatePaginate);
 
 // Export the model correctly
 const Video = mongoose.model("Video", videoSchema);
-export { Video };
+export default Video ;

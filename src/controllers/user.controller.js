@@ -6,8 +6,9 @@ import { APIResponse } from "../utils/APIResonse.js";
 const registerUser=asyncHandler( async (req,res) => {
    
     const {fullName,email,username,password}=req.body
-    console.log("email",email);
-    
+    console.log("req.files:", req.files);
+    console.log("req.body:", req.body);
+
     if(
         [fullName,username,email,password].some((field)=>
         field?.trim()==="")
@@ -15,7 +16,7 @@ const registerUser=asyncHandler( async (req,res) => {
         throw new Apierror(400,"All fields are compulsory")
     }
 
-  const existedUser= User.findOne({
+  const existedUser= await User.findOne({
         $or:[{username},{email}]
     })
     if(existedUser){
@@ -23,16 +24,20 @@ const registerUser=asyncHandler( async (req,res) => {
     }
     
    const avatarLocalPath= req.files?.avatar[0]?.path;
-   const coverImageLocalPath=req.files?.coverImage[0]?.path
+   const coverImageLocalPath=req.files?.coverImage[0]?.path;
 
     if(!avatarLocalPath){
         throw new Apierror(400,"Avatar file is mandatory")
     }
   const avatar= await uploadOnCloudinary(avatarLocalPath)
   const coverImage=await uploadOnCloudinary(coverImageLocalPath)
+
+
    if(!avatar){
-     throw new Apierror(400,"Avatar file is mandatory")
+     throw new Apierror(400,"Avatar file is always mandatory")
    }
+
+
  const user =await User.create({
     fullName,
     avatar:avatar.url,
@@ -49,7 +54,7 @@ const registerUser=asyncHandler( async (req,res) => {
   if(!createdUser) {
     throw new Apierror(500,"Registered user's entry doesn't exist!!")
   }
-  return res.statusCode(201).json(
+  return res.status(201).json(
     new APIResponse(200,createdUser,"User successfully registered")
   )
 })
