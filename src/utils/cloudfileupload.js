@@ -13,17 +13,17 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) {
-      console.log("❌ No local file path received");
+      console.log(" No local file path received");
       return null;
     }
 
-    console.log("⬆️ Uploading to Cloudinary:", localFilePath);
+    console.log(" Uploading to Cloudinary:", localFilePath);
 
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
 
-    console.log("✅ File uploaded on Cloudinary:", response.secure_url);
+    console.log(" File uploaded on Cloudinary:", response.secure_url);
 
     // ✅ delete local file AFTER successful upload
     fs.unlinkSync(localFilePath);
@@ -31,7 +31,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     return response;
 
   } catch (error) {
-    console.error("❌ Cloudinary upload error:", error.message);
+    console.error(" Cloudinary upload error:", error.message);
 
     // ✅ delete local file safely
     if (localFilePath && fs.existsSync(localFilePath)) {

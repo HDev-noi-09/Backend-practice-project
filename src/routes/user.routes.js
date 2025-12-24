@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser } from "../controllers/user.controller.js";
 import upload from "../middlewares/multer.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 
 const router = Router();
@@ -8,11 +9,6 @@ const router = Router();
 router.post(
   "/register",
 
-  // 1️⃣ prove request reaches router
-  (req, res, next) => {
-    console.log("🔥 Route hit");
-    next();
-  },
 
   // 2️⃣ multer parses multipart/form-data
   upload.fields([
@@ -31,5 +27,6 @@ router.post(
   // 4️⃣ controller
   registerUser
 );
-
+router.route("/login").post(loginUser)
+router.roure("/logout").post(verifyJWT,logoutUser)
 export default router;
